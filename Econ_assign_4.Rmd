@@ -86,31 +86,70 @@ mc_graph
 ```{r}
 #determine demand curves
 
-#calculating the y-intercept
-A_demand_price <- (model_A$coefficients[1] + model_A$coefficients[2]*180)
-A_demand_price
+A<-180
+B<-200
+C<-220
+D<-300
 
-B_demand_price <- (model_B$coefficients[1] + model_B$coefficients[2]*200)
-B_demand_price
+#calculating the y-intercept of demand
+A_demand_int <- (model_A$coefficients[1] + model_A$coefficients[2]*A)
+A_demand_int
 
-C_demand_price <- (model_C$coefficients[1] + model_C$coefficients[2]*220)
-C_demand_price
+B_demand_int <- (model_B$coefficients[1] + model_B$coefficients[2]*B)
+B_demand_int
 
-D_demand_price <- (model_D$coefficients[1] + model_D$coefficients[2]*300)
-D_demand_price
+C_demand_int <- (model_C$coefficients[1] + model_C$coefficients[2]*C)
+C_demand_int
+
+D_demand_int <- (model_D$coefficients[1] + model_D$coefficients[2]*D)
+D_demand_int
+
+#slope of demand
+
+A_slope <- (A_demand_int/-A)
+A_slope
+
+B_slope <- (B_demand_int/-B)
+B_slope
+
+C_slope <- (C_demand_int/-C)
+C_slope
+
+D_slope <- (D_demand_int/-D)
+D_slope
 
 ```
 
 ```{r}
 #Demand curves
+#demand price = slope*x + intercept
 
-#create a dataframe
-A_price <- c(A_demand_price)
-A_carbon <- c(180)
-A_dataframe <- data.frame(A_carbon, A_price)
+A_demand <- function(x) {
+  Demand = (A_slope)*x + A_demand_int
+}
 
-A_demand <- lm(A_price ~ A_carbon, data = A_dataframe)
-summary(A_demand)
+B_demand <- function(x) {
+  Demand = (B_slope)*x + B_demand_int
+}
+
+C_demand <- function(x) {
+  Demand = (C_slope)*x + C_demand_int
+}
+
+D_demand <- function(x) {
+  Demand = (D_slope)*x + D_demand_int
+}
+
+
+#create a dataframe, Not applicable anymore
+#A_price <- c(A_demand_int)
+#A_carbon <- c(A)
+#A_dataframe <- data.frame(A_carbon, A_price)
+
+#A_demand <- lm(A_price ~ A_carbon, data = A_dataframe)
+#summary(A_demand)
+
+
 
 ```
 
