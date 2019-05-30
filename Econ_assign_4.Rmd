@@ -16,8 +16,10 @@ library(reshape2)
 
 carbon_abate <- read_csv("HW4Data.csv")
 
-carbon_tidy <- melt(carbon_abate[c('Abatement',  'MC_A', 'MC_B', 'MC_C', 'MC_D')], id.vars = 1)
-
+carbon_tidy <- melt(carbon_abate[c('Abatement',  'MC_A', 'MC_B', 'MC_C', 'MC_D')], id.vars = 1) %>% rename(quantity = Abatement,
+         sector = variable, 
+         price = value)
+  
 ```
 
 ```{r}
@@ -60,7 +62,16 @@ summary(model_C)
 model_D <- lm(MC_D ~ Abatement, data = carbon_abate)
 summary(model_D)
 
+#Marginal cost of abatement graphs
+
+mc_graph <- ggplot(carbon_tidy, aes(x = price, y = quantity)) +
+  geom_point(aes(color = sector))+
+  facet_wrap(~sector)+
+  geom_smooth(method = lm, se = TRUE, size = 0.5, color = "gray20")
+mc_graph
+
 ```
+
 
 ##Supply graph with Demand
 ```{r}
