@@ -17,7 +17,48 @@ carbon_abate <- read_csv("HW4Data.csv")
 
 ```
 
+```{r}
+#Visualize the data
+
+sector_A <- ggplot(carbon_abate, aes(x = Abatement, y = MC_A)) +
+  geom_point()
+sector_A
+
+sector_B <- ggplot(carbon_abate, aes(x = Abatement, y = MC_B)) +
+  geom_point()
+sector_B
+
+sector_C <- ggplot(carbon_abate, aes(x = Abatement, y = MC_C)) +
+  geom_point()
+sector_C
+
+sector_D <- ggplot(carbon_abate, aes(x = Abatement, y = MC_D)) +
+  geom_point()
+sector_D
+
+
+```
+
+
 1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).
+
+```{r}
+#Linear Models for each sector
+
+model_A <- lm(MC_A ~ Abatement, data = carbon_abate)
+summary(model_A)
+
+model_B <- lm(MC_B ~ Abatement, data = carbon_abate)
+summary(model_B)
+
+model_C <- lm(MC_C ~ Abatement, data = carbon_abate)
+summary(model_C)
+
+model_D <- lm(MC_D ~ Abatement, data = carbon_abate)
+summary(model_D)
+
+```
+
 
 
 2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
