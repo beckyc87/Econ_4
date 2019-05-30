@@ -75,6 +75,31 @@ summary(model_D)
 ```{r}
 #determine demand curves
 
+#calculating the y-intercept
+A_demand_price <- (model_A$coefficients[1] + model_A$coefficients[2]*180)
+A_demand_price
+
+B_demand_price <- (model_B$coefficients[1] + model_B$coefficients[2]*200)
+B_demand_price
+
+C_demand_price <- (model_C$coefficients[1] + model_C$coefficients[2]*220)
+C_demand_price
+
+D_demand_price <- (model_D$coefficients[1] + model_D$coefficients[2]*300)
+D_demand_price
+
+```
+
+```{r}
+#Demand curves
+
+#create a dataframe
+A_price <- c(A_demand_price)
+A_carbon <- c(180)
+A_dataframe <- data.frame(A_carbon, A_price)
+
+A_demand <- lm(A_price ~ A_carbon, data = A_dataframe)
+summary(A_demand)
 
 ```
 
