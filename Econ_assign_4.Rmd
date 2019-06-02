@@ -14,7 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(reshape2)
 
-carbon_abate <- read_csv("HW4Data.csv") %>% 
+carbon_abate <- read_csv("HW4Data.csv")
+
+carbon_s_d <- carbon_abate%>% 
   mutate(demandA = A_demand(x = Abatement)) %>% 
   mutate(demandB = B_demand(x = Abatement)) %>% 
   mutate(demandC = C_demand(x = Abatement)) %>%
@@ -83,7 +85,7 @@ mc_graph
 ##Supply graph with Demand and supply
 ```{r}
 #Graph sector A
-A_graph <- ggplot(carbon_abate) +
+A_graph <- ggplot(carbon_s_d) +
   geom_smooth(aes(x = Abatement, y = MC_A), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   geom_smooth(aes(x = demandA, y = MC_A), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   theme_classic()+
@@ -95,7 +97,7 @@ A_graph <- ggplot(carbon_abate) +
 A_graph
 
 #Graph sector B
-B_graph <- ggplot(carbon_abate) +
+B_graph <- ggplot(carbon_s_d) +
   geom_smooth(aes(x = Abatement, y = MC_B), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   geom_smooth(aes(x = demandB, y = MC_B), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   theme_classic()+
@@ -106,7 +108,7 @@ B_graph <- ggplot(carbon_abate) +
   scale_x_continuous(expand = c(0,0), limits = c(0,160))
 B_graph
 
-C_graph <- ggplot(carbon_abate) +
+C_graph <- ggplot(carbon_s_d) +
   geom_smooth(aes(x = Abatement, y = MC_C), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   geom_smooth(aes(x = demandC, y = MC_C), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   theme_classic()+
@@ -117,7 +119,7 @@ C_graph <- ggplot(carbon_abate) +
   scale_x_continuous(expand = c(0,0), limits = c(0,160))
 C_graph
 
-D_graph <- ggplot(carbon_abate) +
+D_graph <- ggplot(carbon_s_d) +
   geom_smooth(aes(x = Abatement, y = MC_D), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   geom_smooth(aes(x = demandD, y = MC_D), method = lm, se = FALSE, size = 0.5, color = "gray20") +
   theme_classic()+
