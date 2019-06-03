@@ -170,20 +170,16 @@ D_slope
 #Demand curves
 #demand price = slope*x + intercept
 
-A_demand <- function(x) {
-  Demand = (A_slope)*x + A_demand_int
+A_demand <- function(x) {(A_slope)*x + A_demand_int
 }
 
-B_demand <- function(x) {
-  Demand = (B_slope)*x + B_demand_int
+B_demand <- function(x) {(B_slope)*x + B_demand_int
 }
 
-C_demand <- function(x) {
-  Demand = (C_slope)*x + C_demand_int
+C_demand <- function(x) {(C_slope)*x + C_demand_int
 }
 
-D_demand <- function(x) {
-  Demand = (D_slope)*x + D_demand_int
+D_demand <- function(x) {(D_slope)*x + D_demand_int
 }
 
 
@@ -210,6 +206,64 @@ carbon_s_d <- carbon_abate%>%
     a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total      emissions from 600 down to 300).
     b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the     tax that accomplishes the desired reduction.
     c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus      100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed     to trade with each other. You will need to derive the outcome of that trading.
+    
+# a. Carbon cap
+```{r}
+#Sector cost
+capcost_a <- integrate(A_demand, 0, A)
+capcost_a #8566.836
+
+capcost_b <- integrate(A_demand, 0, B)
+capcost_b #8461.072
+
+capcost_c <- integrate(A_demand, 0, C)
+capcost_c #8143.782 
+
+#Total cost
+capcost <- 8566.836 + 8461.072 + 8143.782
+capcost #Total cost of the carbon cap policy is $25171.69
+
+#Total tax revenue
+captax <- 0
+```
+
+# b. Carbon tax
+```{r}
+A_demand_X <- function(y) {(y - A_demand_int) / A_slope}
+
+B_demand_X <- function(y) {(y - B_demand_int) / B_slope}
+
+C_demand_X <- function(y) {(y - C_demand_int) / C_slope}
+
+
+agg_demand_X <- function(y) {((y - A_demand_int) / A_slope) + ((y - B_demand_int) / B_slope) + ((y - C_demand_int) / C_slope)}
+
+A_slope
+A_demand_int
+B_slope
+B_demand_int
+C_slope
+C_demand_int
+
+# x = (y-95.18706) / -0.528817) + ((y-49.06656 ) / -0.2453328 ) + ((y-160.7868 ) / -0.7308492 )
+
+agg_demand <- function(x) {(-0.09482*x - 56.89054) / 0.69552}
+## double check this algebra ^^
+
+agg_graph <- ggplot(data.frame(x=c(1, 200)), aes(x=x)) + 
+  stat_function(fun = agg_demand, geom = "line") + 
+  xlab("x") + 
+  ylab("y") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,200))
+agg_graph
+```
+
+# c. Cap and trade
+```{r}
+
+
+```
+   
     
     
 4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?
