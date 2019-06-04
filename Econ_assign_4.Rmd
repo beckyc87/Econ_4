@@ -210,18 +210,18 @@ carbon_s_d <- carbon_abate%>%
 # a. Carbon cap
 ```{r}
 #Sector cost
-capcost_a <- integrate(A_demand, 0, A)
-capcost_a #8566.836
+capcost_a <- integrate(A_demand, 100, A)
+capcost_a #1692.214
 
-capcost_b <- integrate(A_demand, 0, B)
-capcost_b #8461.072
+capcost_b <- integrate(A_demand, 100, B)
+capcost_b #1586.451
 
-capcost_c <- integrate(A_demand, 0, C)
-capcost_c #8143.782 
+capcost_c <- integrate(A_demand, 100, C)
+capcost_c #1269.161 
 
 #Total cost
-capcost <- 8566.836 + 8461.072 + 8143.782
-capcost #Total cost of the carbon cap policy is $25171.69
+capcost <- 1692.214 + 1586.451 + 1269.161
+capcost #Total cost of the carbon cap policy is $4547.82
 
 #Total tax revenue
 captax <- 0
@@ -234,7 +234,6 @@ A_demand_X <- function(y) {(y - A_demand_int) / A_slope}
 B_demand_X <- function(y) {(y - B_demand_int) / B_slope}
 
 C_demand_X <- function(y) {(y - C_demand_int) / C_slope}
-
 
 agg_demand_X <- function(y) {((y - A_demand_int) / A_slope) + ((y - B_demand_int) / B_slope) + ((y - C_demand_int) / C_slope)}
 
@@ -263,7 +262,7 @@ agg_graph
 # tax using marginal cost curve
 ```{r}
 
-#supply curve functions
+#supply curve functions solved for y, gives the price
 A_supply <- function(x) {(model_A$coefficients[2])*x + model_A$coefficients[1]}
 
 B_supply <- function(x) {(model_B$coefficients[2])*x + model_B$coefficients[1]}
@@ -272,9 +271,38 @@ C_supply <- function(x) {(model_C$coefficients[2])*x + model_C$coefficients[1]}
 
 D_supply <- function(x) {(model_D$coefficients[2])*x + model_D$coefficients[1]}
 
+
+#supply curve function solved for x, gives the quantity
+A_supply_x <- function(y) {(y - model_A$coefficients[1]) / model_A$coefficients[2]}
+
+B_supply_x <- function(y) {(y - model_B$coefficients[1]) / model_B$coefficients[2]}
+
+C_supply_x <- function(y) {(y - model_C$coefficients[1]) / model_C$coefficients[2]}
+
+D_supply_x <- function(y) {(y - model_D$coefficients[1]) / model_D$coefficients[2]}
+
 #aggregate supply curve
 
+#may be more difficult then necessary
+agg_supply_x <- function(y) {((y - model_A$coefficients[1]) / model_A$coefficients[2]) + ((y - model_B$coefficients[1]) / model_B$coefficients[2]) + ((y - model_C$coefficients[1]) / model_C$coefficients[2])}
 
+#Madelines code pulling from
+#Mag =(1/sectorA$coefficients[2])+(1/sectorB$coefficients[2])+(1/sectorC$coefficients[2])
+#Bag = (-(sectorA$coefficients[1]/sectorA$coefficients[2])-(sectorB$coefficients[1]/sectorB$coefficients[2])-(sectorC$coefficients[1]/sectorC$coefficients[2]))
+
+agg_slope_supply <- (1/model_A$coefficients[2]) + (1/model_B$coefficients[2]) + (1/model_C$coefficients[2])
+agg_intercept_supply <- (-(model_A$coefficients[1]/model_A$coefficients[2]) - (model_B$coefficients[1]/model_B$coefficients[2]) - (model_C$coefficients[1]/model_C$coefficients[2]))
+
+# Price = (quantity + intercept) / slope
+
+agg_supply <- function(x) {(x + agg_intercept_supply) / agg_slope_supply}
+tax <- agg_supply(300)
+tax #35.19137
+
+#carbon per sector with tax, currently this does not add up to 300 currently 
+A_supply_x(tax)
+B_supply_x(tax)
+C_supply_x(tax)
 
 ```
 
