@@ -245,6 +245,8 @@ B_demand_int
 C_slope
 C_demand_int
 
+agg_demand_X(0)
+
 # x = (y-95.18706) / -0.528817) + ((y-49.06656 ) / -0.2453328 ) + ((y-160.7868 ) / -0.7308492 )
 
 agg_demand <- function(x) {(-0.09482*x - 56.89054) / 0.69552}
@@ -260,7 +262,18 @@ agg_graph
 
 # tax using marginal cost curve
 ```{r}
+
+#supply curve functions
+A_supply <- function(x) {(model_A$coefficients[2])*x + model_A$coefficients[1]}
+
+B_supply <- function(x) {(model_B$coefficients[2])*x + model_B$coefficients[1]}
+
+C_supply <- function(x) {(model_C$coefficients[2])*x + model_C$coefficients[1]}
+
+D_supply <- function(x) {(model_D$coefficients[2])*x + model_D$coefficients[1]}
+
 #aggregate supply curve
+
 
 
 ```
