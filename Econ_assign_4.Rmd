@@ -258,6 +258,15 @@ agg_graph <- ggplot(data.frame(x=c(1, 200)), aes(x=x)) +
 agg_graph
 ```
 
+# tax using marginal cost curve
+```{r}
+#aggregate supply curve
+
+
+```
+
+
+
 # c. Cap and trade
 ```{r}
 
