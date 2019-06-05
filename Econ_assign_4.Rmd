@@ -290,6 +290,13 @@ agg_supply_x <- function(y) {((y - model_A$coefficients[1]) / model_A$coefficien
 #Mag =(1/sectorA$coefficients[2])+(1/sectorB$coefficients[2])+(1/sectorC$coefficients[2])
 #Bag = (-(sectorA$coefficients[1]/sectorA$coefficients[2])-(sectorB$coefficients[1]/sectorB$coefficients[2])-(sectorC$coefficients[1]/sectorC$coefficients[2]))
 
+A_slope_mc <- model_A$coefficients[2]
+A_int_mc <- model_A$coefficients[1]
+B_slope_mc <- model_B$coefficients[2]
+B_int_mc <- model_B$coefficients[1]
+C_slope_mc <- model_C$coefficients[2]
+C_int_mc <- model_C$coefficients[1]
+
 agg_slope_supply <- (1/model_A$coefficients[2]) + (1/model_B$coefficients[2]) + (1/model_C$coefficients[2])
 agg_intercept_supply <- (-(model_A$coefficients[1]/model_A$coefficients[2]) - (model_B$coefficients[1]/model_B$coefficients[2]) - (model_C$coefficients[1]/model_C$coefficients[2]))
 
@@ -299,11 +306,14 @@ agg_supply <- function(x) {(x + agg_intercept_supply) / agg_slope_supply}
 tax <- agg_supply(300)
 tax #35.19137
 
+agg_mc_price <- function(q) {(q + (A_int_mc/A_slope_mc) + (B_int_mc/B_slope_mc) + (C_int_mc/C_slope_mc)) / ((1/A_slope_mc) + (1/B_slope_mc) + (1/C_slope_mc))}
+tax_2 <- agg_mc_price(300)
+tax_2
 
 #carbon per sector with tax, currently this does not add up to 300 currently 
-A_supply_x(tax)
-B_supply_x(tax)
-C_supply_x(tax)
+A_supply_x(tax_2)
+B_supply_x(tax_2)
+C_supply_x(tax_2)
 
 ```
 
@@ -319,10 +329,31 @@ C_supply_x(tax)
     
 4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?
 
+```{r}
+
+
+
+```
+
+
 
 5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.
     a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+    
+```{r}
+#country 
+
+
+```
+
     b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
     c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
+    
+```{r}
+
+
+
+```
+
     
     
