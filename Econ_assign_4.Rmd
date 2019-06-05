@@ -210,18 +210,18 @@ carbon_s_d <- carbon_abate%>%
 # a. Carbon cap
 ```{r}
 #Sector cost
-capcost_a <- integrate(A_demand, 100, A)
-capcost_a #1692.214
+capcost_a <- integrate(A_demand, 80, A)
+capcost_a #2644.085
 
 capcost_b <- integrate(A_demand, 100, B)
 capcost_b #1586.451
 
-capcost_c <- integrate(A_demand, 100, C)
-capcost_c #1269.161 
+capcost_c <- integrate(A_demand, 120, C)
+capcost_c #528.817 
 
 #Total cost
-capcost <- 1692.214 + 1586.451 + 1269.161
-capcost #Total cost of the carbon cap policy is $4547.82
+capcost <- 2644.085 + 1586.451 + 528.817
+capcost #Total cost of the carbon cap policy is $4759.35
 
 #Total tax revenue
 captax <- 0
