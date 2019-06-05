@@ -299,6 +299,7 @@ agg_supply <- function(x) {(x + agg_intercept_supply) / agg_slope_supply}
 tax <- agg_supply(300)
 tax #35.19137
 
+
 #carbon per sector with tax, currently this does not add up to 300 currently 
 A_supply_x(tax)
 B_supply_x(tax)
@@ -320,8 +321,8 @@ C_supply_x(tax)
 
 
 5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.
-    a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution         would you expect in country X? In country Y?
-    b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution       will there be in country X and country Y?
-    c. What advice can you give country X and country Y about the desirability of allowing international trade      of carbon emissions credits?
+    a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+    b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
+    c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
     
     
