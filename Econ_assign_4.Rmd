@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#Load packages
 ```{r}
 
 library(tidyverse)
@@ -16,15 +17,11 @@ library(reshape2)
 
 carbon_abate <- read_csv("HW4Data.csv")
 
-carbon_tidy <- melt(carbon_abate[c('Abatement',  'MC_A', 'MC_B', 'MC_C', 'MC_D')], id.vars = 1) %>% rename(quantity = Abatement,
-         sector = variable, 
-         price = value)
-  
 ```
 
+#Visualize raw data
 ```{r}
-#Visualize the data
-
+#Marginal cost of abatement scatter plots
 sector_A <- ggplot(carbon_abate, aes(x = Abatement, y = MC_A)) +
   geom_point()
 sector_A
@@ -41,15 +38,19 @@ sector_D <- ggplot(carbon_abate, aes(x = Abatement, y = MC_D)) +
   geom_point()
 sector_D
 
-
 ```
 
 
-1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).
+#Question 1. 
+Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).
 
+## 1) Choose a functional form 
+Answer: Linear regression bc fuckkkk that shit
+
+## 2) Determine marginal cost of abatement functions for each sector
 ```{r}
-#Linear Models for each sector
 
+#MC Linear regressions
 model_A <- lm(MC_A ~ Abatement, data = carbon_abate)
 summary(model_A)
 
@@ -62,172 +63,201 @@ summary(model_C)
 model_D <- lm(MC_D ~ Abatement, data = carbon_abate)
 summary(model_D)
 
-#Marginal cost of abatement graphs
-
-mc_graph <- ggplot(carbon_tidy, aes(x = price, y = quantity)) +
-  geom_point(aes(color = sector))+
-  facet_wrap(~sector)+
-  geom_smooth(method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  theme_classic()
-mc_graph
-
-
-
+#MC Functions 
+MC_A_fxn <- function(Q) {(model_A$coefficients[2])*Q + model_A$coefficients[1]}
+MC_B_fxn <- function(Q) {(model_B$coefficients[2])*Q + model_B$coefficients[1]}
+MC_C_fxn <- function(Q) {(model_C$coefficients[2])*Q + model_C$coefficients[1]}
+MC_D_fxn <- function(Q) {(model_D$coefficients[2])*Q + model_D$coefficients[1]}
 ```
 
+## 3) How well does your model fit the data?
+Answer: Close enough bitch
 
-##Supply graph with Demand and supply
+## 4) Produce a plot of the marginal abatement cost functions for all four sectors
 ```{r}
-#Graph sector A
-A_graph <- ggplot(carbon_s_d) +
-  geom_smooth(aes(x = Abatement, y = MC_A), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  geom_smooth(aes(x = Abatement, y = demandA), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  theme_classic()+
-  labs(title = "Sector A", 
-       x = "Carbon Emissions (Tons)",
-       y = "Price ($/ton)") +
-  scale_y_continuous(expand = c(0,0), limits = c(0,120)) +
-  scale_x_continuous(expand = c(0,0), limits = c(0,160))
-A_graph
 
-#Graph sector B
-B_graph <- ggplot(carbon_s_d) +
-  geom_smooth(aes(x = Abatement, y = MC_B), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  geom_smooth(aes(x = Abatement, y = demandB), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  theme_classic()+
-  labs(title = "Sector B", 
-       x = "Carbon Emissions (Tons)",
-       y = "Price ($/ton)") +
-  scale_y_continuous(expand = c(0,0), limits = c(0,120)) +
-  scale_x_continuous(expand = c(0,0), limits = c(0,160))
-B_graph
+#MC graph
+MC_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) + 
+  stat_function(fun = MC_A_fxn, geom = "line") + 
+  stat_function(fun = MC_B_fxn, geom = "line") + 
+  stat_function(fun = MC_C_fxn, geom = "line") + 
+  stat_function(fun = MC_D_fxn, geom = "line") + 
+  xlab("Carbon emissions (tons)") + 
+  ylab("Price ($/ton)") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,250))+
+  scale_y_continuous(expand = c(0,0), limits = c(0,200))+
+  theme_classic() 
+MC_graph
 
-C_graph <- ggplot(carbon_s_d) +
-  geom_smooth(aes(x = Abatement, y = MC_C), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  geom_smooth(aes(x = Abatement, y = demandC), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  theme_classic()+
-  labs(title = "Sector C", 
-       x = "Carbon Emissions (Tons)",
-       y = "Price ($/ton)") +
-  scale_y_continuous(expand = c(0,0), limits = c(0,120)) +
-  scale_x_continuous(expand = c(0,0), limits = c(0,160))
-C_graph
 
-D_graph <- ggplot(carbon_s_d) +
-  geom_smooth(aes(x = Abatement, y = MC_D), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  geom_smooth(aes(x = Abatement, y = demandD), method = lm, se = FALSE, size = 0.5, color = "gray20") +
-  theme_classic()+
-  labs(title = "Sector D", 
-       x = "Carbon Emissions (Tons)",
-       y = "Price ($/ton)") +
-  scale_y_continuous(expand = c(0,0), limits = c(0,120)) +
-  scale_x_continuous(expand = c(0,0), limits = c(0,160))
-D_graph
-
+## **To do: Color code the lines and/or add a legend
 ```
 
 
-2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
 
+# Question 2.
+Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
+
+## 1) Demand curves for carbon emissions for each sector
 ```{r}
-#determine demand curves
+#Set initial emissions
+Q_A_initial <- 180
+Q_B_initial <- 200
+Q_C_initial <- 220
+Q_D_initial <- 300
 
-A<-180
-B<-200
-C<-220
-D<-300
 
-#calculating the y-intercept of demand
-A_demand_int <- (model_A$coefficients[1] + model_A$coefficients[2]*A)
-A_demand_int
+#Price for each sector at their initial Q (i.e. the y intercept of the demand function)
+demand_A_int <- (model_A$coefficients[1] + model_A$coefficients[2]*Q_A_initial)
+demand_A_int #95.18706 
 
-B_demand_int <- (model_B$coefficients[1] + model_B$coefficients[2]*B)
-B_demand_int
+demand_B_int <- (model_B$coefficients[1] + model_B$coefficients[2]*Q_B_initial)
+demand_B_int #49.06656 
 
-C_demand_int <- (model_C$coefficients[1] + model_C$coefficients[2]*C)
-C_demand_int
+demand_C_int <- (model_C$coefficients[1] + model_C$coefficients[2]*Q_C_initial)
+demand_C_int #160.7868 
 
-D_demand_int <- (model_D$coefficients[1] + model_D$coefficients[2]*D)
-D_demand_int
+demand_D_int <- (model_D$coefficients[1] + model_D$coefficients[2]*Q_D_initial)
+demand_D_int #87.66577 
 
-#slope of demand
 
-A_slope <- (A_demand_int/-A)
-A_slope
+#Slope of the demand function for each sector
+demand_A_slope <- (demand_A_int/-Q_A_initial)
+demand_A_slope # -0.528817 
 
-B_slope <- (B_demand_int/-B)
-B_slope
+demand_B_slope <- (demand_B_int/-Q_B_initial)
+demand_B_slope # -0.2453328 
 
-C_slope <- (C_demand_int/-C)
-C_slope
+demand_C_slope <- (demand_C_int/-Q_C_initial)
+demand_C_slope # -0.7308492 
 
-D_slope <- (D_demand_int/-D)
-D_slope
+demand_D_slope <- (demand_D_int/-Q_D_initial)
+demand_D_slope # -0.2922192 
+
+
+#Final demand functions (price = slope*Q + intercept)
+demand_A_fxn <- function(Q) {demand_A_slope*Q + demand_A_int}
+demand_B_fxn <- function(Q) {demand_B_slope*Q + demand_B_int}
+demand_C_fxn <- function(Q) {demand_C_slope*Q + demand_C_int}
+demand_D_fxn <- function(Q) {demand_D_slope*Q + demand_D_int}
+
 
 ```
 
+## 2) Graph of the demand curves
 ```{r}
-#Demand curves
-#demand price = slope*x + intercept
+#Demand graph
+demand_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) + 
+  stat_function(fun = demand_A_fxn, geom = "line") + 
+  stat_function(fun = demand_B_fxn, geom = "line") + 
+  stat_function(fun = demand_C_fxn, geom = "line") + 
+  stat_function(fun = demand_D_fxn, geom = "line") + 
+  xlab("Carbon emissions (tons)") + 
+  ylab("Price ($/ton)") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,250))+
+  scale_y_continuous(expand = c(0,0), limits = c(0,200))+
+  theme_classic() 
+demand_graph
 
-A_demand <- function(x) {(A_slope)*x + A_demand_int
-}
-
-B_demand <- function(x) {(B_slope)*x + B_demand_int
-}
-
-C_demand <- function(x) {(C_slope)*x + C_demand_int
-}
-
-D_demand <- function(x) {(D_slope)*x + D_demand_int
-}
-
-
-#create a dataframe, Not applicable anymore
-#A_price <- c(A_demand_int)
-#A_carbon <- c(A)
-#A_dataframe <- data.frame(A_carbon, A_price)
-
-#A_demand <- lm(A_price ~ A_carbon, data = A_dataframe)
-#summary(A_demand)
-
-
-carbon_s_d <- carbon_abate%>% 
-  mutate(demandA = A_demand(x = Abatement)) %>% 
-  mutate(demandB = B_demand(x = Abatement)) %>% 
-  mutate(demandC = C_demand(x = Abatement)) %>%
-  mutate(demandD = D_demand(x = Abatement))
+# **To do: Color code the lines and/or add legend
 
 ```
 
+## 3) Which sector is willing to pay the most for the first unit of carbon emissions?
+Answer: 
 
+---------------------------------------------
 
-3. Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive: (1) the total cost of meeting the target in country X, (2) the cost (or benefit) to each sector, and (3) the tax revenue generated.
-    a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total      emissions from 600 down to 300).
-    b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the     tax that accomplishes the desired reduction.
-    c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus      100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed     to trade with each other. You will need to derive the outcome of that trading.
+#Question 3.
+Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive: 
+(1) The cost (or benefit) to each sector
+(2) The total cost of meeting the target in country X 
+(3) The tax revenue generated
+
     
-# a. Carbon cap
+# A. Carbon cap
+Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total      emissions from 600 down to 300).
+
+A: 180 tons --> 80 tons
+B: 200 tons --> 100 tons
+C: 220 tons --> 120 tons
+
+## (1) The cost (or benefit) to each sector
 ```{r}
 #Sector cost
-capcost_a <- integrate(A_demand, 80, A)
-capcost_a #2644.085
+cost_A_cap <- integrate(demand_A_fxn, 80, Q_A_initial)
+cost_A_cap # 2644.085
 
-capcost_b <- integrate(A_demand, 100, B)
-capcost_b #1586.451
+cost_B_cap <- integrate(demand_B_fxn, 100, Q_B_initial)
+cost_B_cap # 1226.664
 
-capcost_c <- integrate(A_demand, 120, C)
-capcost_c #528.817 
+cost_C_cap <- integrate(demand_C_fxn, 120, Q_C_initial)
+cost_C_cap # 3654.246
 
-#Total cost
-capcost <- 2644.085 + 1586.451 + 528.817
-capcost #Total cost of the carbon cap policy is $4759.35
-
-#Total tax revenue
-captax <- 0
 ```
 
-# b. Carbon tax
+## (2) The total cost of meeting the target in country X 
+```{r}
+#Total cost
+cost_total_cap <- cost_A_cap[["value"]] + cost_B_cap[["value"]] + cost_C_cap[["value"]]
+cost_total_cap # 7524.995
+
+#Total cost of the carbon cap policy is $7524.995
+
+```
+
+## (3) Tax revenue generated
+```{r}
+
+#Total tax revenue = $0 
+```
+
+
+
+
+# B. Carbon tax
+To emit a ton of carbon in country X, you must pay a tax of $t. Find the tax that accomplishes the desired reduction.
+
+
+## (1) The cost (or benefit) to each sector
+```{r}
+
+#Define the coefficients
+MC_A_slope <- model_A$coefficients[2]
+MC_B_slope <- model_B$coefficients[2]
+MC_C_slope <- model_C$coefficients[2]
+
+MC_A_int <- model_A$coefficients[1]
+MC_B_int <- model_B$coefficients[1]
+MC_C_int <- model_C$coefficients[1]
+
+#Create an aggregate marginal cost function
+MC_agg_fxn <- function(Q) {(Q + (MC_A_int/MC_A_slope) + (MC_B_int/MC_B_slope) + (MC_C_int/MC_C_slope)) / ((1/MC_A_slope) + (1/MC_B_slope) + (1/MC_C_slope))}
+
+tax <- MC_agg_fxn(300)
+tax #39.42658 
+
+#carbon per sector with tax, currently this does not add up to 300 currently 
+A_supply_x(tax)
+B_supply_x(tax)
+C_supply_x(tax)
+
+#Cost to each sector
+
+```
+
+## (2) The total cost of meeting the target in country X 
+```{r}
+
+
+```
+
+## (3) Tax revenue generated
+```{r}
+
+#Total tax revenue = $0 
+```
+
 ```{r}
 A_demand_X <- function(y) {(y - A_demand_int) / A_slope}
 
@@ -263,23 +293,17 @@ agg_graph
 ```{r}
 
 #supply curve functions solved for y, gives the price
-A_supply <- function(x) {(model_A$coefficients[2])*x + model_A$coefficients[1]}
 
-B_supply <- function(x) {(model_B$coefficients[2])*x + model_B$coefficients[1]}
-
-C_supply <- function(x) {(model_C$coefficients[2])*x + model_C$coefficients[1]}
-
-D_supply <- function(x) {(model_D$coefficients[2])*x + model_D$coefficients[1]}
 
 
 #supply curve function solved for x, gives the quantity
-A_supply_x <- function(y) {(y - model_A$coefficients[1]) / model_A$coefficients[2]}
+MC_A_Qfxn <- function(P) {(P - model_A$coefficients[1]) / model_A$coefficients[2]}
 
-B_supply_x <- function(y) {(y - model_B$coefficients[1]) / model_B$coefficients[2]}
+MC_B_Qfxn <- function(P) {(P - model_B$coefficients[1]) / model_B$coefficients[2]}
 
-C_supply_x <- function(y) {(y - model_C$coefficients[1]) / model_C$coefficients[2]}
+MC_C_Qfxn <- function(P) {(P - model_C$coefficients[1]) / model_C$coefficients[2]}
 
-D_supply_x <- function(y) {(y - model_D$coefficients[1]) / model_D$coefficients[2]}
+MC_D_Qfxn <- function(P) {(P - model_D$coefficients[1]) / model_D$coefficients[2]}
 
 #aggregate supply curve
 
@@ -290,12 +314,7 @@ agg_supply_x <- function(y) {((y - model_A$coefficients[1]) / model_A$coefficien
 #Mag =(1/sectorA$coefficients[2])+(1/sectorB$coefficients[2])+(1/sectorC$coefficients[2])
 #Bag = (-(sectorA$coefficients[1]/sectorA$coefficients[2])-(sectorB$coefficients[1]/sectorB$coefficients[2])-(sectorC$coefficients[1]/sectorC$coefficients[2]))
 
-A_slope_mc <- model_A$coefficients[2]
-A_int_mc <- model_A$coefficients[1]
-B_slope_mc <- model_B$coefficients[2]
-B_int_mc <- model_B$coefficients[1]
-C_slope_mc <- model_C$coefficients[2]
-C_int_mc <- model_C$coefficients[1]
+
 
 agg_slope_supply <- (1/model_A$coefficients[2]) + (1/model_B$coefficients[2]) + (1/model_C$coefficients[2])
 agg_intercept_supply <- (-(model_A$coefficients[1]/model_A$coefficients[2]) - (model_B$coefficients[1]/model_B$coefficients[2]) - (model_C$coefficients[1]/model_C$coefficients[2]))
@@ -306,20 +325,14 @@ agg_supply <- function(x) {(x + agg_intercept_supply) / agg_slope_supply}
 tax <- agg_supply(300)
 tax #35.19137
 
-agg_mc_price <- function(q) {(q + (A_int_mc/A_slope_mc) + (B_int_mc/B_slope_mc) + (C_int_mc/C_slope_mc)) / ((1/A_slope_mc) + (1/B_slope_mc) + (1/C_slope_mc))}
-tax_2 <- agg_mc_price(300)
-tax_2
 
-#carbon per sector with tax, currently this does not add up to 300 currently 
-A_supply_x(tax_2)
-B_supply_x(tax_2)
-C_supply_x(tax_2)
 
 ```
 
 
 
-# c. Cap and trade
+# C. Cap and trade
+Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.
 ```{r}
 
 
