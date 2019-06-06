@@ -152,7 +152,7 @@ demand_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) +
   stat_function(fun = demand_A_fxn, geom = "line", aes(color="A")) + 
   stat_function(fun = demand_B_fxn, geom = "line", aes(color="B")) + 
   stat_function(fun = demand_C_fxn, geom = "line", aes(color="C")) + 
-  stat_function(fun = demand_D_fxn, geom = "line", aes(color="A")) + 
+  stat_function(fun = demand_D_fxn, geom = "line", aes(color="D")) + 
   xlab("Carbon emissions (tons)") + 
   ylab("Price ($/ton)") +
   scale_x_continuous(expand = c(0,0), limits = c(0,250))+
