@@ -91,7 +91,6 @@ MC_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) +
 MC_graph
 
 
-## **To do: Color code the lines and/or add a legend
 ```
 
 
@@ -161,7 +160,6 @@ demand_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) +
   scale_color_manual(values = c(A="red", B="blue", C="green", D="purple"), name = "Sector")
 demand_graph
 
-# **To do: Color code the lines and/or add legend
 
 ```
 
