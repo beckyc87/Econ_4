@@ -303,79 +303,6 @@ cost_A_tax[["value"]] + cost_B_tax[["value"]] + cost_C_tax[["value"]] #11519.40
 
 ```
 
-```{r}
-
-##NOT USING!!!
-A_demand_X <- function(y) {(y - A_demand_int) / A_slope}
-
-B_demand_X <- function(y) {(y - B_demand_int) / B_slope}
-
-C_demand_X <- function(y) {(y - C_demand_int) / C_slope}
-
-agg_demand_X <- function(y) {((y - A_demand_int) / A_slope) + ((y - B_demand_int) / B_slope) + ((y - C_demand_int) / C_slope)}
-
-A_slope
-A_demand_int
-B_slope
-B_demand_int
-C_slope
-C_demand_int
-
-agg_demand_X(0)
-
-# x = (y-95.18706) / -0.528817) + ((y-49.06656 ) / -0.2453328 ) + ((y-160.7868 ) / -0.7308492 )
-
-agg_demand <- function(x) {(-0.09482*x - 56.89054) / 0.69552}
-## double check this algebra ^^
-
-agg_graph <- ggplot(data.frame(x=c(1, 200)), aes(x=x)) + 
-  stat_function(fun = agg_demand, geom = "line") + 
-  xlab("x") + 
-  ylab("y") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,200))
-agg_graph
-```
-
-# tax using marginal cost curve
-```{r}
-##NOT USING!!
-#supply curve functions solved for y, gives the price
-
-
-#supply curve function solved for x, gives the quantity
-MC_A_Qfxn <- function(P) {(P - model_A$coefficients[1]) / model_A$coefficients[2]}
-
-MC_B_Qfxn <- function(P) {(P - model_B$coefficients[1]) / model_B$coefficients[2]}
-
-MC_C_Qfxn <- function(P) {(P - model_C$coefficients[1]) / model_C$coefficients[2]}
-
-MC_D_Qfxn <- function(P) {(P - model_D$coefficients[1]) / model_D$coefficients[2]}
-
-#aggregate supply curve
-
-#may be more difficult then necessary
-agg_supply_x <- function(y) {((y - model_A$coefficients[1]) / model_A$coefficients[2]) + ((y - model_B$coefficients[1]) / model_B$coefficients[2]) + ((y - model_C$coefficients[1]) / model_C$coefficients[2])}
-
-#Madelines code pulling from
-#Mag =(1/sectorA$coefficients[2])+(1/sectorB$coefficients[2])+(1/sectorC$coefficients[2])
-#Bag = (-(sectorA$coefficients[1]/sectorA$coefficients[2])-(sectorB$coefficients[1]/sectorB$coefficients[2])-(sectorC$coefficients[1]/sectorC$coefficients[2]))
-
-
-
-agg_slope_supply <- (1/model_A$coefficients[2]) + (1/model_B$coefficients[2]) + (1/model_C$coefficients[2])
-agg_intercept_supply <- (-(model_A$coefficients[1]/model_A$coefficients[2]) - (model_B$coefficients[1]/model_B$coefficients[2]) - (model_C$coefficients[1]/model_C$coefficients[2]))
-
-# Price = (quantity + intercept) / slope
-
-agg_supply <- function(x) {(x + agg_intercept_supply) / agg_slope_supply}
-tax <- agg_supply(300)
-tax #35.19137
-
-
-
-```
-
-
 
 # C. Cap and trade
 Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.
@@ -406,7 +333,7 @@ total_cost_trade #11519.40
 
 MC_agg_allsec_fxn <- function(Q) {(Q + (MC_A_int/MC_A_slope) + (MC_B_int/MC_B_slope) + (MC_C_int/MC_C_slope) + (MC_D_int/MC_D_slope)) / ((1/MC_A_slope) + (1/MC_B_slope) + (1/MC_C_slope) + (1/MC_D_slope))}
 
-#total emission Country X and Y is 600, or should we use 300
+#total emission Country X and Y is 600, or should we use 300?
 
 credit_all <- MC_agg_allsec_fxn(600)
 credit_all #55.03763 cost carbon credit
@@ -454,6 +381,7 @@ total_cost_trade_all
 
     a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
     
+# pollution contry x    
 ```{r}
 #country X tons of air pollution is equal to the amount of carbon emitted
 country_x_pollution_1 <- Q_A_tax + Q_B_tax + Q_C_tax
