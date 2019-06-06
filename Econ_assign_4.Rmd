@@ -255,7 +255,7 @@ Q_C_tax #65.16953 tons carbon
 Q_total_tx <- Q_A_tax + Q_B_tax + Q_C_tax
 Q_total_tx
 
-#Cost to each sector
+### NEEDS TO BE CALCULATED #Cost to each sector
 
 ```
 
@@ -267,7 +267,18 @@ Q_total_tx
 
 ## (3) Tax revenue generated
 ```{r}
+#amount emitted times the tax
+A_tax_rev <- Q_A_tax*tax
+B_tax_rev <- Q_B_tax*tax
+C_tax_rev <- Q_C_tax*tax
 
+A_tax_rev
+B_tax_rev
+C_tax_rev
+
+#total tax revenue
+total_tax_rev <- A_tax_rev + B_tax_rev +C_tax_rev
+total_tax_rev #11827.97
 
 ```
 
