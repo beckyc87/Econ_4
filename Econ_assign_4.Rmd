@@ -82,7 +82,7 @@ MC_graph <- ggplot(data.frame(x=c(1, 250)), aes(x=x)) +
   stat_function(fun = MC_B_fxn, geom = "line", aes(color="B")) + 
   stat_function(fun = MC_C_fxn, geom = "line", aes(color="C")) + 
   stat_function(fun = MC_D_fxn, geom = "line", aes(color="D")) + 
-  xlab("Carbon emissions (tons)") + 
+  xlab("Carbon Abatement (tons)") + 
   ylab("Price ($/ton)") +
   scale_x_continuous(expand = c(0,0), limits = c(0,250))+
   scale_y_continuous(expand = c(0,0), limits = c(0,200))+ 
