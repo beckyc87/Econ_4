@@ -329,6 +329,7 @@ A_credit_bought <- Q_A_tax - 80
 B_credit_sold <- 100 - Q_B_tax 
 C_credit_bought <-  Q_C_tax - 120
 
+#cost to each sector
 cost_A_trade <- integrate(MC_A_fxn, 0, abate_A_tax)
 cost_A_trade #1282.27
 cost_A_trade_credit <- cost_A_trade[["value"]] + A_credit_bought*tax
@@ -344,6 +345,7 @@ cost_C_trade #904.9294
 cost_C_trade_credit <- cost_C_trade[["value"]] + C_credit_bought*tax
 cost_C_trade_credit #2278.176
 
+#cost to country x
 total_cost_trade <- cost_A_trade[["value"]] + cost_B_trade[["value"]] + cost_C_trade[["value"]]
 total_cost_trade #5879.812
 
