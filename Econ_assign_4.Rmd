@@ -282,6 +282,7 @@ cost_C_tax <- integrate(MC_C_fxn, 0, abate_C_tax)
 total_cost_C_tax <- cost_C_tax[["value"]] + (Q_C_tax*tax)
 total_cost_C_tax #7009.365
 
+#total cost witht the tax cost
 total_cost_tax_prerev <- total_cost_A_tax + total_cost_B_tax + total_cost_C_tax
 total_cost_tax_prerev
 
@@ -304,9 +305,9 @@ total_tax_rev #11827.97
 
 #total cost to whole Country X, (total cost - tax revenue)
 total_cost_tax <- total_cost_tax_prerev - total_tax_rev
-total_cost_tax #11519.4
+total_cost_tax #5879.812
 
-cost_A_tax[["value"]] + cost_B_tax[["value"]] + cost_C_tax[["value"]] #11519.40
+cost_A_tax[["value"]] + cost_B_tax[["value"]] + cost_C_tax[["value"]] #5879.812
 
 ```
 
@@ -329,25 +330,25 @@ B_credit_sold <- 100 - Q_B_tax
 C_credit_bought <-  Q_C_tax - 120
 
 cost_A_trade <- integrate(MC_A_fxn, 0, abate_A_tax)
-cost_A_trade #2470.671
-cost_A_trade_credit <- cost_A_trade[["value"]] + A_credit_bought
-cost_A_trade_credit #2474.006
+cost_A_trade #1282.27
+cost_A_trade_credit <- cost_A_trade[["value"]] + A_credit_bought*tax
+cost_A_trade_credit #1939.66
 
 cost_B_trade <- integrate(MC_B_fxn, 0, abate_B_tax)
-cost_B_trade #288.5947
-cost_B_trade_credit <- cost_B_trade[["value"]] - B_credit_sold
-cost_B_trade_credit #340.0902
+cost_B_trade #3692.271
+cost_B_trade_credit <- cost_B_trade[["value"]] - B_credit_sold*tax
+cost_B_trade_credit #1661.977
 
 cost_C_trade <- integrate(MC_C_fxn, 0, abate_C_tax)
-cost_C_trade #8760.131
-cost_C_trade_credit <- cost_C_trade[["value"]] + C_credit_bought
-cost_C_trade_credit #8705.301
+cost_C_trade #904.9294
+cost_C_trade_credit <- cost_C_trade[["value"]] + C_credit_bought*tax
+cost_C_trade_credit #2278.176
 
 total_cost_trade <- cost_A_trade[["value"]] + cost_B_trade[["value"]] + cost_C_trade[["value"]]
-total_cost_trade #11519.40
+total_cost_trade #5879.812
 
 total_cost_trade_credit <- cost_A_trade_credit + cost_B_trade_credit + cost_C_trade_credit
-total_cost_trade_credit
+total_cost_trade_credit #5879.812
 
 ```
    
@@ -367,38 +368,73 @@ credit_all <- MC_agg_allsec_fxn(300)
 credit_all #29.80249 cost carbon credit
 
 #carbon abated by each sector both countries
-Q_A_trade <- A_MC_P(credit_all)
-Q_B_trade <- B_MC_P(credit_all)
-Q_C_trade <- C_MC_P(credit_all)
-Q_D_trade <- D_MC_P(credit_all)
+abate_A_trade <- A_MC_P(credit_all)
+abate_B_trade <- B_MC_P(credit_all)
+abate_C_trade <- C_MC_P(credit_all)
+abate_D_trade <- D_MC_P(credit_all)
+#ABATED
+abate_A_trade #66.65079 tons carbon
+abate_B_trade #103.0711 tons carbon
+abate_C_trade #52.89119 tons carbon
+abate_D_trade #77.3869 tons carbon
 
-Q_A_trade #66.65079 tons carbon
-Q_B_trade #103.0711 tons carbon
-Q_C_trade #52.89119 tons carbon
-Q_D_trade #77.3869 tons carbon
-
-Q_total_trade <- Q_A_trade + Q_B_trade + Q_C_trade + Q_D_trade
-Q_total_trade #300 tons carbon
+abate_total_trade <- abate_A_trade + abate_B_trade + abate_C_trade + abate_D_trade
+abate_total_trade #300 tons carbon
  
 ```
 
 # cost to each sector and total cost
 ```{r}
+#carbon emitted per sector
+Q_A_trade <- Q_A_initial- A_MC_P(credit_all)
+Q_B_trade <- Q_B_initial- B_MC_P(credit_all)
+Q_C_trade <- Q_C_initial- C_MC_P(credit_all)
+Q_D_trade <- Q_D_initial- D_MC_P(credit_all)
 
-cost_A_trade_all <- integrate(demand_A_fxn, Q_A_trade, Q_A_initial)
-cost_A_trade_all 
+Q_A_trade #113.3492
+Q_B_trade #96.92889
+Q_C_trade #167.1088
+Q_D_trade #222.6131
 
-cost_B_trade_all <- integrate(demand_B_fxn, Q_B_trade, Q_B_initial)
+#credits bought and sold
+A_bought <- Q_A_trade - 80
+B_sold <- 100 - Q_B_trade 
+C_bought <-  Q_C_trade - 120
+D_sold <- 300 - Q_D_trade
+
+#cost_A_trade_credit <- cost_A_trade[["value"]] + A_credit_bought
+#cost_A_trade_credit #1299.27
+
+#cost to each sector
+cost_A_trade_all <- integrate(MC_A_fxn, 0, abate_A_trade)
+cost_A_trade_all
+cost_A_trade_all_credit <- cost_A_trade_all[["value"]] + A_bought*credit_all
+cost_A_trade_all_credit #1698.989
+
+cost_B_trade_all <- integrate(MC_B_fxn, 0, abate_B_trade)
 cost_B_trade_all 
+cost_B_trade_all_credit <- cost_B_trade_all[["value"]] - B_sold*credit_all
+cost_B_trade_all_credit #1924.554
 
-cost_C_trade_all <- integrate(demand_C_fxn, Q_C_trade, Q_C_initial)
-cost_C_trade_all 
+cost_C_trade_all <- integrate(MC_C_fxn, 0, abate_C_trade)
+cost_C_trade_all
+cost_C_trade_all_credit <- cost_C_trade_all[["value"]] + C_bought*credit_all
+cost_C_trade_all_credit #1883.88
 
-cost_D_trade_all <- integrate(demand_D_fxn, Q_D_trade, Q_D_initial)
+cost_D_trade_all <- integrate(MC_D_fxn, 0, abate_D_trade)
 cost_D_trade_all 
+cost_D_trade_all_credit <- cost_D_trade_all[["value"]] - D_sold*credit_all
+cost_D_trade_all_credit #-778.3183
 
-total_cost_trade_all <- cost_A_trade[["value"]] + cost_B_trade[["value"]] + cost_C_trade[["value"]] + cost_C_trade[["value"]]
+total_cost_trade_all <- cost_A_trade_all[["value"]] + cost_B_trade_all[["value"]] + cost_C_trade_all[["value"]] + cost_C_trade_all[["value"]]
 total_cost_trade_all 
+
+total_cost_trade_all <- cost_A_trade_all_credit + cost_B_trade_all_credit + cost_C_trade_all_credit + cost_D_trade_all_credit
+total_cost_trade_all #4729.105
+
+total_cost_trade_countryx <-cost_A_trade_all_credit + cost_B_trade_all_credit + cost_C_trade_all_credit
+total_cost_trade_countryx #5507.423, this cost to country x is lower than domestic trade only
+
 
 
 ```
@@ -423,10 +459,10 @@ country_y_pollution <- 300 # tons air pollution = normal emissions
     
 ```{r}
 country_x_pollution_2 <- Q_A_trade + Q_B_trade + Q_C_trade 
-country_x_pollution_2
+country_x_pollution_2 #377.3869
 
 country_y_pollution_2 <-Q_D_trade
-country_y_pollution_2
+country_y_pollution_2 #222.6131
 
 ```
 
